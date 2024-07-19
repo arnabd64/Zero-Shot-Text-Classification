@@ -14,6 +14,7 @@ onnxruntime = "^1.18.1"
 onnx = "^1.16.1"
 fastapi = "^0.111.1"
 uvicorn = {extras = ["standard"], version = "^0.30.1"}
+gradio = "^4.38.1"
 
 
 [[tool.poetry.source]]

@@ -1,17 +1,21 @@
 import os
 from contextlib import asynccontextmanager
 
+import gradio as gr
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.requests import Request
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from optimum.pipelines import pipeline
 from transformers import AutoTokenizer
 
+from api.middleware import ResponseID, ResponseTime
 from api.models import ZeroShotClassifierRequest, ZeroShotClassifierResponse
+from webapp.gradio_app import app
 
 
 @asynccontextmanager
-async def lifespan(_app: FastAPI):
+async def lifespan(_server: FastAPI):
     # load tokenizer
     tokenizer = AutoTokenizer.from_pretrained(os.getenv("HF_MODEL"))
 
@@ -28,18 +32,24 @@ async def lifespan(_app: FastAPI):
     yield {"model": classifier}
 
 
-app = FastAPI(
+server = FastAPI(
     lifespan=lifespan,
     title="Zero Shot Text Classification",
     description=f"Huggingface Model: {os.getenv('HF_MODEL')}"
 )
 
-@app.get("/")
+server.add_middleware(ResponseTime)
+server.add_middleware(ResponseID)
+
+@server.get("/")
 async def root():
-    return {"message": "Server is Running"}
+    return RedirectResponse("/gradio")
 
 
-@app.post("/predict", response_model=ZeroShotClassifierResponse)
+@server.post("/predict", response_model=ZeroShotClassifierResponse)
 async def predict(request: Request, params: ZeroShotClassifierRequest):
     # retrieve the pipeline and process the text
     return request.state.model(params.text, candidate_labels=params.labels)
+
+
+server = gr.mount_gradio_app(server, app, path="/gradio")
