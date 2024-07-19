@@ -1,7 +1,11 @@
+import os
+
 import gradio as gr
 import gradio.components as gc
 
-from webapp.inference import classify
+from handler.inference import Classifier
+
+classifier = Classifier()
 
 with gr.Blocks() as app:
     
@@ -25,7 +29,7 @@ with gr.Blocks() as app:
             with gr.Column():
                 label_output = gc.Label(label="Label Scores")
                 
-        submit.click(classify, inputs=[text_input, labels], outputs=[label_output], queue=True)
+        submit.click(classifier.webui, inputs=[text_input, labels], outputs=[label_output], queue=True)
         
     with gr.Tab(label="Help"):
         with open("webapp/assets/help.md") as md:
