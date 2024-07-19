@@ -1,0 +1,32 @@
+[tool.poetry]
+name = "zero-shot-text-classification"
+version = "0.1.0"
+description = ""
+authors = ["arnabd64 <arnabdhar32@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+torch = {version = "^2.3.1+cpu", source = "pytorch"}
+optimum = "^1.21.2"
+onnxruntime = "^1.18.1"
+onnx = "^1.16.1"
+
+
+[[tool.poetry.source]]
+name = "pytorch"
+url = "https://download.pytorch.org/whl/cpu"
+priority = "explicit"
+
+
+[tool.poetry.group.notebook.dependencies]
+ipykernel = "^6.29.5"
+
+
+[tool.poetry.group.dev.dependencies]
+isort = "^5.13.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
