@@ -1,0 +1,9 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000/tcp
+    environment:
+      - HF_MODEL=pitangent-ds/deberta-v3-nli-onnx-quantized

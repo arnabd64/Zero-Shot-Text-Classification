@@ -5,7 +5,8 @@ from fastapi import FastAPI
 from fastapi.requests import Request
 from optimum.onnxruntime import ORTModelForSequenceClassification
 from optimum.pipelines import pipeline
-from transformers import AutoTokenizer, ZeroShotClassificationPipeline
+from transformers import AutoTokenizer
+
 from api.models import ZeroShotClassifierRequest, ZeroShotClassifierResponse
 
 
@@ -40,10 +41,5 @@ async def root():
 
 @app.post("/predict", response_model=ZeroShotClassifierResponse)
 async def predict(request: Request, params: ZeroShotClassifierRequest):
-    # retrieve the pipeline
-    classifier = request.state.model
-
-    # process the text
-    response = classifier(params.text, candidate_labels=params.labels)
-
-    return response
+    # retrieve the pipeline and process the text
+    return request.state.model(params.text, candidate_labels=params.labels)
