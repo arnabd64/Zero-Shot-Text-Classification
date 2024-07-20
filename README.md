@@ -4,6 +4,114 @@ This is the source code for my Huggingface Space deployment. You can checkout th
 
 I have used a [DeBERTa](https://arxiv.org/pdf/2006.03654) model architecture that excels at Zero Shot Tasks very well. I have quantized a finetuned model, [sileod/deberta-v3-base-tasksource-nli](https://huggingface.co/sileod/deberta-v3-base-tasksource-nli) provided by [Damien Sileo](https://huggingface.co/sileod) to further improve the inference latency. The model has been quantized using Huggingface Optimum for ONNX. You can see the [quantize.ipynb](./quantize.ipynb) for the source code for quantization.
 
+## Gradio WebUI
+
+You can access the Gradio App directly on Huggingface Spaces by following this [Link](https://huggingface.co/spaces/arnabdhar/Zero-Shot-Classification-DeBERTa-Quantized). You can embed this application as an iframe using the following HTML code:
+
+```html
+<iframe
+	src="https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space"
+	frameborder="0"
+	width="850"
+	height="450"
+></iframe>
+```
+
+The Direct URL is: `https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space`
+
+## API endpoint
+
+1. `cURL` command
+
+```bash
+curl -X 'POST' \
+  'https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space/predict' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "text": "I am loving it",
+  "labels": ["positive", "negative"]
+}'
+```
+
+2. Postman
+
+__Base URL__: https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space
+
+__Method__: `POST`
+
+__URL__: `/predict`
+
+__Body__:
+
+```json
+{
+  "text": "I am loving it",
+  "labels": ["positive", "negative"]
+}
+```
+
+3. Python
+
+```python
+import requests
+import json
+
+# Define the URL
+url = 'https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space/predict'
+
+# Define the headers
+headers = {
+    'accept': 'application/json',
+    'Content-Type': 'application/json'
+}
+
+# Define the payload
+data = {
+    "text": "I am loving it",
+    "labels": ["positive", "negative"]
+}
+
+# Make the POST request
+response = requests.post(url, headers=headers, data=json.dumps(data))
+
+# Print the response
+print(response.json())
+```
+
+4. Javascript
+
+```javascript
+// Define the URL
+const url = 'https://arnabdhar-zero-shot-classification-deberta-quantized.hf.space/predict';
+
+// Define the headers
+const headers = {
+  'accept': 'application/json',
+  'Content-Type': 'application/json'
+};
+
+// Define the payload
+const data = {
+  text: 'I am loving it',
+  labels: ['positive', 'negative']
+};
+
+// Make the POST request
+fetch(url, {
+  method: 'POST',
+  headers: headers,
+  body: JSON.stringify(data)
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error('Error:', error));
+
+```
+
+
+
+
 ## Running the Application
 
 To run the application, I highly recommend using Docker but there are also other ways to get started. But first you have to clone the repository onto your local machine.
